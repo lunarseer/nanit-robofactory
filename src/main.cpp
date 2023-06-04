@@ -1,18 +1,31 @@
 #include <Arduino.h>
+#include <NanitLib.h>
+#include <Servo.h>
 
-// put function declarations here:
-int myFunction(int, int);
+#define SERVO_PIN P7_4
+#define POT_PIN P7_1
+
+Servo s1;
+
+int pot_angle() {
+  int pot_val = analogRead(POT_PIN);
+  return map(pot_val, 0, 1023, 0, 180);
+}
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Serial.begin(9600);
+  Nanit_Base_Start();
+  // GET_NANIT.DrawBattGuage();
+
+  pinMode(POT_PIN, INPUT);
+  s1.attach(SERVO_PIN);
+  s1.write(pot_angle());
+  delay(1000);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  int angle = pot_angle();
+  Serial.println(angle);
+  s1.write(angle);
+  delay(20);
 }
